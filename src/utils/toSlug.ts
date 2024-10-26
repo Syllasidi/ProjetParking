@@ -5,6 +5,7 @@
  * @param saisie - La chaîne à convertir.
  * @returns Le slug généré.
  */
+
 export function toSlug  (saisie: string) : string {
     return saisie
         .toLowerCase() // Convertir en minuscules
@@ -16,3 +17,4 @@ export function toSlug  (saisie: string) : string {
         .replace(/--+/g, '-'); // Supprimer les tirets en trop
 };
 
+export default toSlug;

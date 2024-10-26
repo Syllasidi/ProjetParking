@@ -1,0 +1,15 @@
+meta {
+  name: GetHome
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:3000/
+  body: none
+  auth: none
+}
+
+assert {
+  res.body: isJson 
+}
