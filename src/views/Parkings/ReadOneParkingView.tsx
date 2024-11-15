@@ -1,29 +1,19 @@
 import { Layout } from '../shared/Layout'; 
-import { parkings } from '../../data/staticDatabase'; 
+import Parking from '../../models/Parking';
 
-
+/**
+ * Type des propriétés pour la vue `ReadOneParkingView`.
+ */
 type ReadOneParkingViewProps = {
-  parkingId: number; // ID du parking à afficher
+  parking: Parking & { cityName: string }; // Un objet parking 
 };
 
 /**
  * Composant ReadOneParkingView pour afficher les détails d'un parking spécifique.
- * @param {ReadOneParkingViewProps} props - Les propriétés contenant l'ID du parking.
+ * @param {ReadOneParkingViewProps} props - Les propriétés contenant les informations du parking.
  * @returns {JSX.Element} - Le contenu HTML généré avec TSX.
  */
-const ReadOneParkingView = ({ parkingId }: ReadOneParkingViewProps) => {
-  const parking = parkings.find(parking => parking.id === parkingId);
-  
-  // Affiche une erreur si le parking n'est pas trouvé
-  if (!parking) { 
-    return (
-      <Layout pageTitle="Parking non trouvé">
-        <h1>Erreur 404</h1>
-        <p>Le parking que vous recherchez n'existe pas.</p>
-      </Layout>
-    );
-  }
-
+const ReadOneParkingView = ({ parking }: ReadOneParkingViewProps) => {
   return (
     <Layout pageTitle={`Détails de ${parking.name}`}>
       <h1>{parking.name}</h1>
@@ -31,6 +21,7 @@ const ReadOneParkingView = ({ parkingId }: ReadOneParkingViewProps) => {
       <p>Tarif horaire : {parking.hourlyRate}€</p>
       <p>Statut : {parking.opened ? 'Ouvert' : 'Fermé'}</p>
       <p>Coordonnées GPS : {parking.location.latitude}, {parking.location.longitude}</p>
+      <p>Ville : {parking.cityName}</p>
     </Layout>
   );
 };

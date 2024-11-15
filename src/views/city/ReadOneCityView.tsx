@@ -1,52 +1,34 @@
-// ./src/views/city/ReadOneCityView.tsx
-
-import { Layout } from '../shared/Layout'; 
-import { cities, parkings } from '../../data/staticDatabase'; 
 import City from '../../models/City';
-
+import Parking from '../../models/Parking';
+import Layout from '../shared/Layout';
+/**
+ * Type des propriétés pour la vue `ReadOneCityView`.
+ */
 type ReadOneCityViewProps = {
-  citySlug: string; // Slug de la ville à afficher
+  city: City & { parkings: Parking[] };
 };
 
+
 /**
- * Composant ReadOneCityView pour afficher les détails d'une ville spécifique.
- * @param {ReadOneCityViewProps} props - Les propriétés contenant le slug de la ville.
- * @returns {JSX.Element} - Le contenu HTML généré avec TSX.
+ * Génère le HTML pour afficher les détails d'une ville dans un layout
+ * @param {ReadOneCityViewProps} props - Les propriétés contenant les détails de la ville.
+ * @returns {JSX.Element} - Le JSX du layout affichant les détails de la ville.
  */
-const ReadOneCityView = ({ citySlug }: ReadOneCityViewProps) => {
-  const city = cities.find(city => city.slug === citySlug);
-  
-  // Affiche une erreur si la ville n'est pas trouvée
-  if (!city) {
-    return (
-      <Layout pageTitle="Ville non trouvée">
-        <h1>Erreur 404</h1>
-        <p>La ville que vous recherchez n'existe pas.</p>
-      </Layout>
-    );
-  }
-
-  // Les parkings associés à la ville trouvée
-  const cityParkings = parkings.filter(parking => parking.city_id === city.id);
-
+export const ReadOneCityView = ({ city }: ReadOneCityViewProps) => {
   return (
-    <Layout pageTitle={`Détails de ${city.name}`}>
-      <h1>{city.name}, {city.country}</h1>
-      <p>Coordonnées GPS : {city.location.latitude}, {city.location.longitude}</p>
-      <h2>Parkings Associés :</h2>
-      {cityParkings.length > 0 ? (
-        <ul>
-          {cityParkings.map(parking => (
-            <li key={parking.name}>
-              {parking.name} - Capacité: {parking.numberOfSpots} - Note: {parking.hourlyRate}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>Aucun parking associé trouvé pour cette ville.</p>
-      )}
+    <Layout pageTitle={`Détails de la ville: ${city.name}`}>
+      <h2>Pays: {city.country}</h2>
+      <h3>Coordonnées GPS: {city.location.latitude}, {city.location.longitude}</h3>
+      <h2>Parkings associés:</h2>
+      <ul>
+        {city.parkings.map(parking => (
+          <li key={parking.id}>
+            <strong>{parking.name}</strong> - Capacité: {parking.numberOfSpots} places
+            <br />
+            <a href={`../parkings/${parking.id}`}>voir plus sur ce parking</a>
+          </li>
+        ))}
+      </ul>
     </Layout>
   );
 };
-
-export default ReadOneCityView;

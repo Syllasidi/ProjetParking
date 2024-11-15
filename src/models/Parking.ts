@@ -15,9 +15,10 @@ export default class Parking {
     hourlyRate: number;
     parkIds: number[];
     spots: Spot[];
+  city: any;
 
-    constructor(name: string, city_id: number, location: GPS, numberOfSpots: number, hourlyRate: number) {
-        this.id = generateRandomNumberId();
+    constructor(id : number, name: string, city_id: number, location: GPS, numberOfSpots: number, hourlyRate: number) {
+        this.id = id;
         this.name = name;
         this.city_id = city_id;
         this.location = location;
@@ -28,3 +29,4 @@ export default class Parking {
         this.spots = Array.from({ length: numberOfSpots }, () => new Spot(this.id));
     }
 }
+ 

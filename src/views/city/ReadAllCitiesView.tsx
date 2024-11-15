@@ -1,49 +1,46 @@
-
-import { Layout } from '../shared/Layout';
 import City from '../../models/City';
-
-type ReadAllCitiesViewProps = {
-  cities: Array<City>;
-};
+import Parking from '../../models/Parking';
+import { Layout } from '../shared/Layout';
 
 /**
- * Vue TSX pour afficher la liste des villes.
- * @param {ReadAllCitiesViewProps} props - Les données contenant les villes.
- * @returns {JSX.Element} - Le contenu HTML généré avec TSX.
+ * Type des propriétés pour la vue `ReadAllCitiesView`.
  */
-
-/**  
- * Composant CityLink : Génère un lien vers la page d'une ville 
- * @param {Object} props - Contient la ville à afficher.
- * @return {JSX.Element} - Le lien en utilisant le slug de la ville 
-*/
-const CityLink = ({ city }: { city: City }) => {
-  return (
-    <li>
-      <a href={`/cities/${city.slug}`}>{city.name} - {city.country}</a>
-      <p>Coordonnées GPS : {city.location.latitude}, {city.location.longitude}</p>
-    </li>
-  );
+type ReadAllCitiesViewProps = {
+  cities: (City & { parkings: Parking[] })[];
 };
 
-// Utilisation de CityLink avec la clé 'key' dans la liste
-const CitiesList = ({ cities }: { cities: Array<City> }) => (
-  <ul>
-    {cities.map((city) => (
-      <CityLink   city={city} /> 
-    ))}
-  </ul>
-);
 
-// Composant principal ReadAllCitiesView
-const ReadAllCitiesView = ({ cities }: ReadAllCitiesViewProps) => {
+/**
+ * Génère le HTML pour afficher la liste des villes dans un layout
+ * @param {ReadAllCitiesViewProps} props - Les propriétés contenant la liste des villes.
+ * @returns {JSX.Element} - Le JSX du layout affichant la liste des villes.
+ */
+export const ReadAllCitiesView = ({ cities }: ReadAllCitiesViewProps) => {
   return (
     <Layout pageTitle="Liste des Villes">
-      <h1>Liste des Villes</h1>
-      <CitiesList cities={cities} />
-      
+      <ul>
+        {cities.map(city => (
+          <li key={city.id}>
+            <strong>{city.name}</strong> - Pays: {city.country}
+            <br />
+            Coordonnées GPS: {city.location.latitude}, {city.location.longitude}
+            <br />
+            Parkings associés:
+            <ul>
+              {city.parkings.map(parking => (
+                <li key={parking.id}>
+                  <strong>{parking.name}</strong> - Capacité: {parking.numberOfSpots} places
+                  <br />
+                  
+                </li>
+              ))}
+            </ul>
+            <a href={`../cities/${city.slug}`}>voir plus sur cette ville</a>
+          </li>
+        ))}
+      </ul>
+
     </Layout>
   );
 };
 
-export default ReadAllCitiesView;

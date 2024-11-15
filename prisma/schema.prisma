@@ -1,0 +1,62 @@
+// Ce générateur crée le client Prisma en JavaScript pour interagir avec la base de données
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Configuration d'une base SQLite
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")  // Utilise la variable d'environnement DATABASE_URL
+}
+
+// modèle "City" pour la table "cities"
+model City {
+  id       Int      @id @default(autoincrement())  // Clé primaire avec auto-incrémentation
+  name     String   @unique  // Nom unique de la ville
+  slug     String   @unique  // Slug unique pour chaque ville
+  country  String   // Pays de la ville
+  latitude Float    // Latitude de la ville
+  longitude Float   // Longitude de la ville
+
+  // Relation avec les parkings (un city peut avoir plusieurs parkings)
+  parkings Parking[] 
+}
+
+// Définition du modèle "Parking" pour la table "parkings"
+model Parking {
+  id             Int      @id @default(autoincrement())  // Clé primaire avec auto-incrémentation
+  name           String   @unique  // Nom unique du parking
+  numberOfPlaces Int      // Nombre de places dans le parking
+  opened         Boolean  @default(true)  // Le parking est ouvert, par défaut
+  cityId         Int      // Référence vers l'ID de la ville (clé étrangère)
+  hourlyRate     Float    // Tarif horaire pour le parking
+  latitude       Float    // Latitude du parking
+  longitude      Float    // Longitude du parking
+
+  // Relation avec la table "City"
+  city           City     @relation(fields: [cityId], references: [id])
+  spots          Spot[]   // Relation avec les spots (un parking peut avoir plusieurs spots)
+}
+
+// modèle "Park" pour la table "parks"
+model Park {
+  id                 String   @id @unique  // Identifiant unique pour chaque stationnement
+  startedAt          DateTime  // Date et heure de début du stationnement
+  endedAt            DateTime  // Date et heure de fin du stationnement
+  vehicleNumberPlate String?   // Plaque d'immatriculation du véhicule, optionnelle
+  spotId             Int       // Référence vers l'ID du spot de parking (clé étrangère)
+  price              Float     @default(0)  // Prix du stationnement, par défaut à 0
+
+  // Relation avec la table "Spot" (un park doit être lié à un spot)
+  spot               Spot      @relation(fields: [spotId], references: [id])
+}
+
+// modèle "Spot" pour la table "spots"
+model Spot {
+  id        Int      @id @default(autoincrement())  // Clé primaire avec auto-incrémentation
+  parkingId Int      // Référence vers l'ID du parking auquel le spot appartient (clé étrangère)
+
+  // Relation avec la table "Parking" 
+  parking   Parking  @relation(fields: [parkingId], references: [id])
+  parks     Park[]   // Relation avec la table "Park" 
+}
