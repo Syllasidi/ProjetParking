@@ -1,6 +1,3 @@
-▪︎ Khan Talha SCO  
-▪︎ Bouhadjera Mohammed Arslène MIAGE
-▪︎ Sylla Sidi MIAGE
 
 Étape 01 : Initialisation du Projet
 
